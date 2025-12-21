@@ -13,4 +13,3 @@ source .venv/bin/activate
 
 # Install dependencies
 uv pip install -r requirements.txt
-
