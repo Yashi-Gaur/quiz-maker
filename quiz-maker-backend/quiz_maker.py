@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 from web_scraper import smart_fetch
 from openai import OpenAI
+import json
 
 # Load environment variables in a file called .env
 
@@ -69,8 +70,7 @@ async def build_user_prompt(url, topic):
         The quiz should returned in JSON format.
     """
     return user_prompt
-
-
+    
 async def generate_quiz(url, topic):
     user_prompt = await build_user_prompt(url, topic)
     response = openai.chat.completions.create(
@@ -81,4 +81,30 @@ async def generate_quiz(url, topic):
         ],
         response_format={"type": "json_object"}
     )
-    return response.choices[0].message.content
+    quiz_str = response.choices[0].message.content
+    quiz_json = json.loads(quiz_str)
+    return quiz_json
+
+def normalize_quiz(quiz_json: dict):
+    questions = []
+    options = []
+    answers = []
+
+    for q in quiz_json["questions"]:
+        # Question text
+        questions.append(q["question"])
+
+        # Options for this question
+        option_texts = [opt["content"] for opt in q["options"]]
+        options.append(option_texts)
+
+        # Correct answer (option id)
+        answers.append(q["answer"])
+
+    return {
+        "quiz_title": quiz_json["quiz_title"],
+        "url": quiz_json["url"],
+        "questions": questions,
+        "options": options,
+        "answers": answers
+    }
