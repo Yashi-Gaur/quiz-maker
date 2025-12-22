@@ -101,7 +101,7 @@ function Home() {
                       marginBottom: "20px"
                     }}
                 >
-                    Enter a URL and an optional topic to create a quiz
+                    Turn any webpage into a quiz
                 </Typography>
                 <form onSubmit={(e) => {
                     e.preventDefault(); 

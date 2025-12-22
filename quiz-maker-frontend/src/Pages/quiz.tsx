@@ -1,5 +1,17 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+    Typography,
+    Button,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    Box,
+    Link
+  } from "@mui/material";
+import PixelBlast from "@/components/PixelBlast";
+import ProgressWithLabel from "@/components/progressWithLabel";
+  
 
 function Quiz() {
     const navigate = useNavigate();
@@ -41,33 +53,160 @@ function Quiz() {
     }
 
     return (
-        <>
-            <h2>{topic}</h2>
-            <p>Source: {url}</p>
+        <div style={{ 
+            width: '100%', 
+            height: '100vh', 
+            position: 'relative', 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center" 
+        }}>
+            <PixelBlast
+                variant="square"
+                pixelSize={5}
+                color="rgba(126, 82, 160, 0.8)"
+                patternScale={3}
+                patternDensity={1.2}
+                pixelSizeJitter={0.5}
+                enableRipples
+                rippleSpeed={0.4}
+                rippleThickness={0.12}
+                rippleIntensityScale={1.5}
+                liquid={false}
+                speed={0.6}
+                edgeFade={0.10}
+                transparent
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0
+                }}
+            />
+            <div style={{ 
+                position: 'relative', 
+                zIndex: 1, 
+                padding: '2rem', 
+                height: "500px",
+                width: "700px",
+                backgroundColor: "rgba(0, 0, 0, 0.2)", // 🔑 translucent black
+                backdropFilter: "blur(4px)",          // optional but 🔥
+                borderRadius: "16px",
+            }}>
+                <Typography
+                    variant="h4"
+                    sx={{
+                    color: "#E6BCCD",
+                    marginBottom: "25px"
+                    }}
+                >
+                    {topic}
+                </Typography>
 
-            <h3>Question {qno + 1}</h3>
-            <h4>{questions[qno]}</h4>
-            <div style={{marginBottom: "15px"}}> 
-                {options[qno].map((opt: string, oIndex: number) => (
-                    <label key={oIndex} style={{ display: "block" }}>
-                    <input
-                        type="radio"
-                        name={`q-${qno}`}
-                        checked={userAnswers[qno] === oIndex+1}
-                        onChange={() => handleSelect(qno, oIndex + 1)}
-                    />
-                    {opt}
-                    </label>
-                ))}
+                <ProgressWithLabel current={qno} total={questions.length} />
+                <div 
+                    style={{
+                        width: "560px",
+                        margin: "0 auto", 
+                        marginTop: "40px",         
+                        display: "flex",
+                        flexDirection: "column",   
+                        alignItems: "flex-start",
+                        gap: "20px"
+                    }}
+                >
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            color: "#E6BCCD",
+                        }}
+                    >
+                        {questions[qno]}
+                    </Typography>
+
+                    <RadioGroup
+                        value={userAnswers[qno] ?? ""}
+                        onChange={(e) =>
+                        handleSelect(qno, Number(e.target.value))
+                        }
+                        sx={{ marginBottom: "5px" }}
+                    >
+                        {options[qno].map((opt: string, oIndex: number) => (
+                        <FormControlLabel
+                            key={oIndex}
+                            value={oIndex + 1}
+                            control={
+                            <Radio
+                                sx={{
+                                color: "#E6BCCD",
+                                "&.Mui-checked": {
+                                    color: "#7E52A0"
+                                }
+                                }}
+                            />
+                            }
+                            label={
+                            <Typography sx={{ color: "#E6BCCD" }}>
+                                {opt}
+                            </Typography>
+                            }
+                        />
+                        ))}
+                    </RadioGroup>
+
+                    <Box sx={{ 
+                        width: "560px",
+                        margin: "0 auto",
+                        display: "flex",
+                        justifyContent: "space-between", // 🔑 push apart
+                        alignItems: "center" 
+                    }}>
+                        <Button
+                            variant="outlined"
+                            onClick={handlePrevious}
+                            disabled={qno === 0}
+                            sx={{
+                                borderColor: "#7E52A0",
+                                color: "#7E52A0",
+                                borderRadius: "999px",
+                                backgroundColor: "rgba(126, 82, 160, 0.15)",
+
+                                "&:hover": {
+                                borderColor: "#7E52A0",
+                                backgroundColor: "rgba(126, 82, 160, 0.35)"
+                                },
+
+                                "&.Mui-disabled": {
+                                opacity: 0.4
+                                }
+                            }}
+                        >
+                            Previous
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={handleNext}
+                            sx={{
+                                backgroundColor: "#7E52A0",
+                                color: "#020409",
+                                borderRadius: "999px",
+
+                                "&:hover": {
+                                backgroundColor: "#6A4290"
+                                }
+                            }}
+                        >
+                            {qno === 9 ? "Submit" : "Next"}
+                        </Button>
+                    </Box>
+                </div>
             </div>
-
-            <button onClick={handlePrevious} disabled={qno===0} style={{marginRight: "15px"}}>
-                Previous
-            </button>
-            <button onClick={handleNext}>
-                {qno===9? "Submit": "Next"}
-            </button>
-        </>
+        </div>
 
     )
 }
