@@ -1,15 +1,28 @@
-# LLM-RAG-Agents
-First step to becoming an AI engineer
+# Quiz Whiz
+Takes a URL and makes a quiz!
 
-# First install uv
+# Installation 
+## Backend
+### First install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
-# Check if it exists 
+### Check if it exists 
 uv --version
 
-# Create virtual environment
+### Create virtual environment
 uv venv
-# Activate virtual environment
+### Activate virtual environment
 source .venv/bin/activate
 
-# Install dependencies
+### Install dependencies
+cd quiz-maker-backend
 uv pip install -r requirements.txt
+
+### Run Backend
+uvicorn main:app --reload
+
+## Frontend
+### Install dependencies
+npm install
+
+### Run frontend
+npm run dev
