@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { LoadingButton } from "@mui/lab";
 
 function Home() {
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
     const navigate = useNavigate();
     const [url, setUrl] = useState("");
     const [topic, setTopic] = useState("");
@@ -19,7 +20,7 @@ function Home() {
     const handleSubmit = async () => {
         setLoading(true);
     
-        const res = await fetch("http://localhost:8000/generate-quiz", {
+        const res = await fetch(`${API_URL}/generate-quiz`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url, topic })
