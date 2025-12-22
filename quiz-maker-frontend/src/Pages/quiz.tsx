@@ -7,10 +7,11 @@ import {
     RadioGroup,
     FormControlLabel,
     Box,
-    Link
   } from "@mui/material";
 import PixelBlast from "@/components/PixelBlast";
 import ProgressWithLabel from "@/components/progressWithLabel";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
   
 
 function Quiz() {
@@ -170,6 +171,7 @@ function Quiz() {
                             onClick={handlePrevious}
                             disabled={qno === 0}
                             sx={{
+                                width: "150px",
                                 borderColor: "#7E52A0",
                                 color: "#7E52A0",
                                 borderRadius: "999px",
@@ -184,6 +186,7 @@ function Quiz() {
                                 opacity: 0.4
                                 }
                             }}
+                            startIcon={<ArrowBackIcon />}
                         >
                             Previous
                         </Button>
@@ -192,6 +195,7 @@ function Quiz() {
                             variant="contained"
                             onClick={handleNext}
                             sx={{
+                                width: "150px",
                                 backgroundColor: "#7E52A0",
                                 color: "#020409",
                                 borderRadius: "999px",
@@ -200,6 +204,7 @@ function Quiz() {
                                 backgroundColor: "#6A4290"
                                 }
                             }}
+                            endIcon={<ArrowForwardIcon />}
                         >
                             {qno === 9 ? "Submit" : "Next"}
                         </Button>
