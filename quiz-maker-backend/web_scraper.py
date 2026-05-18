@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests 
-from playwright.async_api import async_playwright
 
 
 # Standard headers to fetch a website
@@ -38,21 +37,20 @@ def fetch_website_links(url):
     return [link for link in links if link]
 
 async def smart_fetch(url):
-    # Try static fetch first
-    r = requests.get(url, timeout=10)
-    soup = BeautifulSoup(r.text, "html.parser")
-    text = soup.get_text(strip=True)
-
-    if len(text) > 500:
+    try:
+        r = requests.get(url, headers=headers, timeout=15)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "html.parser")
+        
+        for tag in soup(["script", "style", "img", "input", "nav", "footer"]):
+            tag.decompose()
+            
+        text = soup.get_text(separator="\n", strip=True)
+        
+        if len(text) < 100:
+            raise ValueError("Insufficient content extracted")
+            
         return text[:2000]
-
-    # Fallback to JS rendering
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
-        await page.goto(url, wait_until="networkidle")
-        html = await page.content()
-        await browser.close()
-
-    soup = BeautifulSoup(html, "html.parser")
-    return soup.get_text(separator="\n", strip=True)[:2000]
+        
+    except Exception as e:
+        raise ValueError(f"Failed to fetch URL: {str(e)}")
